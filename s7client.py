@@ -1,9 +1,17 @@
+#! /usr/bin/env python
+from time import sleep
 import snap7
-client = snap7.client.Client()
-client.connect("127.0.0.1", 0, 0, 1012)
-client.get_connected()
-data = client.db_read(1, 0, 4)
-bytearray(b"\x00\x00\x00\x00")
-data[3] = 0b00000001
-bytearray(b'\x00\x00\x00\x01')
-data.db_write(1, 0, data)
+from snap7.util import *
+import struct
+
+plc = snap7.client.Client()
+plc.connect("127.0.0.1",0,1)
+
+area = 0x82    # area for Q memory in 
+start = 0      # location we are going to start the read
+length = 1     # length in bytes of the read
+bit = 0        # which bit in the Q memory byte we are reading
+
+byte = plc.read_area(area,0,start,length)
+print ("Q0.0:",get_bool(mbyte,0,bit))
+plc.disconnect()
